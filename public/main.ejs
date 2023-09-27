@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Website</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: darkgray;
+  }
+  
+  #header {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0px;
+    padding: 20px;
+    
+  }
+
+  #navigation {
+    margin-left: auto;
+    display: flex;
+    margin-top: 0px;
+    
+  }
+
+  #navigation a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: rgb(255, 0, 0);
+    font-weight: bold;
+  }
+
+  button[type="submit"] {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: yellowgreen;
+    color: rgba(255, 255, 255, 0.133);
+    cursor: pointer;
+  }
+
+
+  #logout-button {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    color: red;
+    cursor: pointer;
+  }
+
+
+  * {
+    margin: 0;
+    padding: 0;
+    font-family:'Times New Roman', Times, serif;
+    }
+  
+  .container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;        
+    }
+
+    .sto {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    color: #fff;
+    margin-left: 10%;
+    }
+  
+    .container h1 {
+    color: rgba(255, 0, 0, 0.41);
+    font-weight: 700;
+    font-size: 25px;
+    text-align: center;
+    }
+  
+  .converter-row {
+    display: flex;
+    width: 40%;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    padding: 50px 20px;
+    margin-left: 22%;
+  }
+
+  .converter-row-output {
+    display: flex;
+    width: 40%;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    padding: 50px 20px;
+   margin-left: 10%;
+  }
+  
+  .col {
+    flex-basis: 32%;
+    text-align: center;
+  }
+  
+  .col label {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  
+  .col input {
+    width: 150px;
+    height: 30px;
+    background: white;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+#contactPopup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+
+.popupContent {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#closePopup {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+  
+</style>
+</head>
+<body>
+  <div id="header">
+    <div id="navigation">
+      <a href="/home" >Home</a>
+      <a href="#">About</a>
+      <a href="#" id="contactLink">Contact Us</a>
+        <a onclick="logout()" href="/home">Logout</a>         
+          <!-- Add user details here -->
+          <div id="contactPopup">
+            <div class="popupContent">
+              <h2>Contact Information</h2>
+              <p>Email: supportneed@gmail.com</p>
+              <p>Phone: +91 80******31</p>
+              <button id="closePopup">Close</button>
+            </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 style="font-size: 45px;">Today's weather forecast<br>
+        Temperature Converter</h1><br><br>
+
+        <form id="temperature-form" action="/temperature" method="post">
+          <div class="converter-row">
+          <label for="options" style="font-size: 20px;">Select an Option:</label>
+          <select id="options" name="conversionType" style="font-size: 20px;">
+              <option value="Fahrenheit">Fahrenheit</option>
+              <option value="celsius">celsius</option>
+              <option value="kelvin">kelvin</option>
+          </select>   </div>
+          
+          <div class="converter-row">
+              <div class="col">
+                  <label for="Input Temperature">Input Temperature</label>
+                  <input type="number" id="fahrenheit" name="temperature"></div>
+              
+              <button type="submit" class="sto" style="background-color: burlywood; color: black;">Convert</button>  </div>
+
+              <div class="converter-row-output">
+                <div class="col">
+                    <label for="celsius">Celsius</label>
+                    <input type="text" id="celsius" name="celsius" value="<%= celsius %>" readonly>
+                </div>
+
+              <div class="col">
+                <label for="fahrenheit">Fahrenheit</label>
+                <input type="text" id="fahrenheit" name="fahrenheit" value="<%= fahrenheit %>" readonly>
+            </div>
+
+              <div class="col">
+                <label for="kelvin">Kelvin</label>
+                <input type="text" id="kelvin" name="kelvin" value="<%= kelvin %>" readonly>
+            </div>
+      </form>
+    </div>
+</div>
+
+<div style="text-align: center; margin-bottom: 10%;">
+<footer>
+  &copy; TEMP-Converter. All rights reserved.
+</footer></div>
+
+<script> 
+
+  // Function to show the contact popup
+  function showContactPopup() {
+    var contactPopup = document.getElementById("contactPopup");
+    contactPopup.style.display = "flex";
+  }
+
+  // Function to close the contact popup
+  function closeContactPopup() {
+    var contactPopup = document.getElementById("contactPopup");
+    contactPopup.style.display = "none";
+  }
+
+  // Attach click event listener to the "Contact Us" link
+  var contactLink = document.getElementById("contactLink");
+  contactLink.addEventListener("click", showContactPopup);
+
+  // Attach click event listener to the "Close" button in the popup
+  var closePopupButton = document.getElementById("closePopup");
+  closePopupButton.addEventListener("click", closeContactPopup);
+</script>
+</body>
+</html>

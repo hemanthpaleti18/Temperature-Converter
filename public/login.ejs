@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <title>Login Page</title>
+</head>
+<style>body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    width: 300px;
+}
+
+.input-box{
+    background: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.input-box input{
+    width: 95%;
+    padding: 10px;
+    font-size: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.input-box img{
+    width: 35px;
+    cursor: pointer;
+}
+
+input {
+    display: block;
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+</style>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form action="loginsubmit" method="post">
+
+            <label for="">Email</label>
+            <input type="email" name="loginEmail" placeholder="Email" required>
+
+            
+            <label for="">Password</label>
+            <div class="input-box">
+            <input type="password" name="loginPassword" placeholder="Password" id="password" required>
+            <img src="hide.png" id="eyeicon" onclick="togglePasswordVisibility()"> </div>
+
+            <button type="submit">Login</button>
+            
+            <p><a href="/forgotpassword">Forgot Password</a></p>
+            <p>Don't have an account?<a href="/signup"> Register</a></p>
+
+
+        </form>
+    </div>
+    <% if(alertmessage){ %>
+        <script>
+            alert('<%- alertmessage %>');
+
+            function togglePasswordVisibility() {
+           var passwordInput = document.getElementById("password");
+             var eyeIcon = document.getElementById("eyeicon");
+
+         if (passwordInput.type === "password") {
+             passwordInput.type = "text";
+             eyeIcon.src = "eye.png";
+         } else {
+            passwordInput.type = "password";
+               eyeIcon.src = "hide.png"; 
+         }
+}
+
+
+        </script>
+    <% } %>
+</body>
+</html>
