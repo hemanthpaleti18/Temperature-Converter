@@ -44,7 +44,7 @@ app.get("/signup", (req, res)=>{
   app.post('/signupsubmit', async (req, res) => {
     const user = {
       email: req.body.email,
-      password: await bcrypt.hash(req.body.signupPassword, 10), // <-- Added comma
+      password: await bcrypt.hash(req.body.signupPassword, 10), 
       Firstname: req.body.firstName,
       Lastname: req.body.lastName
     }
@@ -86,12 +86,11 @@ app.post('/loginsubmit', async (req, res) => {
       return res.redirect(`/login?alertmessage=${encodeURIComponent(alertmessage)}`);
     }
 
-    const userDoc = querySnapshot.docs[0]; // Get the first document from the query
-    const storedEmail = userDoc.data().email; // Assuming your Firestore field name is 'email'
+    const userDoc = querySnapshot.docs[0]; 
+    const storedEmail = userDoc.data().email; 
     const enteredEmail = req.body.loginEmail;
 
     if (storedEmail === enteredEmail) {
-      // Now you can proceed with password validation logic
       const userPassword = userDoc.data().password;
       const enteredPassword = req.body.loginPassword;
       const isPasswordCorrect = await bcrypt.compare(req.body.loginPassword, userPassword); // Corrected variable name
@@ -144,16 +143,76 @@ app.post('/search', async (req, res) => {
     console.error(error);
   }
 
-})
+});
 
 app.get('/forgotpassword', (req, res) => {
   res.render('forgotpassword'); // Render the forgot password page
 });
 
-app.post('/forgot-password', (req, res) => {
+// Define a function to generate a reset token (You can use a library like 'crypto' or 'uuid')
+function generateResetToken() {
+  // Implement the logic to generate a unique token or link here
+  // Example:
+  const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return token;
+}
+
+// Define a function to store the reset token in a database or cache
+async function storeResetTokenInDatabase(userEmail, resetToken) {
+  try {
+    // Implement the logic to store the reset token along with the user's email
+    // Example: You can use Firebase Firestore to store this information
+    const tokenDocRef = db.collection('reset_tokens').doc(userEmail);
+    await tokenDocRef.set({ token: resetToken });
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Define a function to send a password reset email
+async function sendPasswordResetEmail(userEmail, resetToken) {
+  try {
+    // Implement the logic to send a password reset email to the user
+    // You can use libraries like Nodemailer to send emails
+    const transporter = nodemailer.createTransport({
+      service: 'your-email-service-provider', // e.g., 'Gmail'
+      auth: {
+        user: 'your-email@example.com',
+        pass: 'your-email-password'
+      }
+    });
+
+    const mailOptions = {
+      from: 'your-email@example.com',
+      to: userEmail,
+      subject: 'Password Reset',
+      text: `Click the following link to reset your password: ${resetToken}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    throw error;
+  }
+}
+
+app.post('/forgot-password', async (req, res) => {
   const userEmail = req.body.email;
-  // Generate and send a password reset email
-  // You'll implement this in the next step
+  try {
+    // Generate a unique token or link
+    const resetToken = generateResetToken();
+
+    // Store the reset token in a database or cache along with the user's email
+    await storeResetTokenInDatabase(userEmail, resetToken);
+
+    // Send a password reset email to the user with the reset link
+    await sendPasswordResetEmail(userEmail, resetToken);
+
+    // Redirect the user to a confirmation page
+    res.render('password-reset-confirmation'); // Create this view
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    res.render('error-page'); // Create this view
+  }
 });
 
 
