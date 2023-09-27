@@ -5,10 +5,8 @@ const axios = require('axios');
 const app = express();
 const jwt = require('jsonwebtoken');
 
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
-
 
 const { initializeApp,cert} = require('firebase-admin/app');
 const { getFirestore} = require('firebase-admin/firestore');
@@ -17,7 +15,9 @@ initializeApp({
   credential: cert(serviceAccount),
   ignoreUndefinedProperties: true
 });
-const db = getFirestore();
+const db = getFirestore(); 
+
+const bcrypt=require('bcrypt');
 
 app.set("view engine", "ejs")
 app.set("views", path.join (__dirname,"public"))
@@ -29,22 +29,26 @@ app.get('/home', (req, res) => {
   res.render( "home");
 });
 
+app.get('/about', (req, res) => {
+  res.render( "about");
+});
+
 app.use(express.static(path.join(__dirname,'images')));
 
 app.get("/signup", (req, res)=>{
   const alertmessage=req.query.alertmessage;
   res.render( "signup",{alertmessage});
 })
-// Signup route
 
   // Route for user signup
   app.post('/signupsubmit', async (req, res) => {
-    const user={
-      email:req.body.email,
-      password:req.body.signupPassword,
+    const user = {
+      email: req.body.email,
+      password: await bcrypt.hash(req.body.signupPassword, 10), // <-- Added comma
       Firstname: req.body.firstName,
       Lastname: req.body.lastName
     }
+    
     try {
       // Check if user already exists
       const userRef = db.collection('todo');
@@ -65,6 +69,7 @@ app.get("/signup", (req, res)=>{
     }
   }); 
  
+  // Route for user login
 app.get("/login", (req, res)=>{
   const alertmessage=req.query.alertmessage;
   res.render( "login",{alertmessage});
@@ -89,8 +94,9 @@ app.post('/loginsubmit', async (req, res) => {
       // Now you can proceed with password validation logic
       const userPassword = userDoc.data().password;
       const enteredPassword = req.body.loginPassword;
-
-      if (userPassword === enteredPassword) {
+      const isPasswordCorrect = await bcrypt.compare(req.body.loginPassword, userPassword); // Corrected variable name
+    
+      if (isPasswordCorrect) { // Check if the password is correct
         const alertmessage = 'Login successful';
         return res.redirect(`/main?alertmessage=${encodeURIComponent(alertmessage)}`);
       } else {
@@ -101,6 +107,7 @@ app.post('/loginsubmit', async (req, res) => {
       const alertmessage = 'Please check your email ID.';
       return res.redirect(`/login?alertmessage=${encodeURIComponent(alertmessage)}`);
     }
+    
   } catch (error) {
     console.error('Error checking user:', error);
     const alertmessage = 'An error occurred';
