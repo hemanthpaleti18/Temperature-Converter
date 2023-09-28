@@ -25,9 +25,9 @@ app.set("views", path.join (__dirname,"public"))
 // Simulated user data (for the sake of example)
 const users = [];
 
-app.get('/home', (req, res) => {
-  res.render( "home");
-});
+// app.get('/home', (req, res) => {
+//   res.render( "home");
+// });
 
 app.get('/about', (req, res) => {
   res.render( "about");
