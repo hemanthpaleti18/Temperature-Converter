@@ -85,7 +85,6 @@ app.post('/loginsubmit', async (req, res) => {
       const alertmessage = 'User not found. Please register.';
       return res.redirect(`/login?alertmessage=${encodeURIComponent(alertmessage)}`);
     }
-
     const userDoc = querySnapshot.docs[0]; 
     const storedEmail = userDoc.data().email; 
     const enteredEmail = req.body.loginEmail;

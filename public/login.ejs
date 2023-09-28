@@ -90,12 +90,11 @@ button {
             <p>Don't have an account?<a href="/signup"> Register</a></p>
         </form>
     </div>
-    
-    <% if(alertmessage){ %>
-         <% } %>
+     
+    <% if (alertmessage){ %>
+        <% } %>
         <script>
-            alert('<%- alertmessage %>');
-
+            alert('<%= alertmessage %>');
             function togglePasswordVisibility() {
             var passwordInput = document.getElementById("password");
             var eyeIcon = document.getElementById("eyeicon");
@@ -108,7 +107,7 @@ button {
                 eyeIcon.src = "hide.png";
             }
             }
-</script> 
-   
+        </script> 
+ 
 </body>
-</html>
+</html> 

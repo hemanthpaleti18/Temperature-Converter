@@ -23,6 +23,32 @@
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
         width: 300px;
     }
+
+    .input-box {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    position: relative; /* Add this to make it a positioning context for child elements */
+}
+
+.input-box input {
+    width: 95%;
+    padding: 10px;
+    font-size: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.input-box img {
+    width: 35px;
+    cursor: pointer;
+    position: absolute; 
+    right: 10px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+}
+
     
     input {
         display: block;
@@ -54,15 +80,33 @@
             <label for="">Email:</label>
             <input type="email" name="email" placeholder="Email" required>
             <label for="">Password:</label>
-            <input type="password" name="signupPassword" placeholder="Password" required>
+            <div class="input-box"> <!-- Wrap input and image in a div -->
+                <input type="password" name="signupPassword" id="password" placeholder="Password" required>
+                <img src="hide.png" id="eyeicon" onclick="togglePasswordVisibility()">
+            </div>
             <button type="submit">Signup</button>
-            <p> Already have a account?<a href="/login"> Login</a></p>
+            <p> Already have an account? <a href="/login">Login</a></p>
         </form>
     </div>
+
     <% if(alertmessage){ %>
+        <% } %>
         <script>
             alert('<%- alertmessage %>');
-        </script>
-    <% } %>
+            function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("password");
+            var eyeIcon = document.getElementById("eyeicon");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.src = "eye.png";
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.src = "hide.png";
+            }
+            }
+        </script>   
+        
+
 </body>
 </html>
